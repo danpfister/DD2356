@@ -2,4 +2,4 @@
 *.out
 *.mod
 *.vtk
-!*_results.txt
+*.err
