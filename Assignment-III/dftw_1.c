@@ -32,7 +32,7 @@ int printResults(double *xr, double *xi, int N);
 
 int main(int argc, char *argv[]) {
   // size of input array
-  int N = 8000; // 8,000 is a good number for testing
+  int N = 10000; // 8,000 is a good number for testing
   printf("DFTW calculation with N = %d \n", N);
 
   // Allocate array for input vector
@@ -49,6 +49,8 @@ int main(int argc, char *argv[]) {
   double *Xr_o = (double *)malloc(N * sizeof(double));
   double *Xi_o = (double *)malloc(N * sizeof(double));
   setOutputZero(Xr_o, Xi_o, N);
+
+  omp_set_num_threads(128);
 
   // start timer
   double start_time = omp_get_wtime();
@@ -85,15 +87,21 @@ int main(int argc, char *argv[]) {
 // DFT/IDFT routine
 // idft: 1 direct DFT, -1 inverse IDFT (Inverse DFT)
 int DFT(int idft, double *xr, double *xi, double *Xr_o, double *Xi_o, int N) {
+  #pragma omp parallel for
   for (int k = 0; k < N; k++) {
+    double xr_o = 0.0;
+    double xi_o = 0.0;
+    #pragma omp parallel for reduction(+: xr_o, xi_o)
     for (int n = 0; n < N; n++) {
       // Real part of X[k]
-      Xr_o[k] +=
+      xr_o +=
           xr[n] * cos(n * k * PI2 / N) + idft * xi[n] * sin(n * k * PI2 / N);
       // Imaginary part of X[k]
-      Xi_o[k] +=
+      xi_o +=
           -idft * xr[n] * sin(n * k * PI2 / N) + xi[n] * cos(n * k * PI2 / N);
     }
+    Xr_o[k] = xr_o;
+    Xi_o[k] = xi_o;
   }
 
   // normalize if you are doing IDFT
