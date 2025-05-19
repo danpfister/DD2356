@@ -1,0 +1,4 @@
+Total number of processes - 100 
+Total sum of matrix elements: 504495000.000000
+Total execution time: 0.021861 seconds 
+Computation time: 0.000065 seconds 
