@@ -1,0 +1,1 @@
+[Score-P] src/services/timer/SCOREP_Timer.c:390: Warning: Calculated timer (tsc) frequencies differ from average frequency (2245890222 Hz) by more than 22458 Hz. Consider using a timer with a fixed frequency like gettimeofday or clock_gettime. Prolonging the measurement duration might mitigate the frequency variations.
