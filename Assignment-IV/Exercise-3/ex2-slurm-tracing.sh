@@ -17,4 +17,4 @@
 export SCOREP_ENABLE_PROFILING=false
 export SCOREP_ENABLE_TRACING=true
 
-srun -n 100 --mem=64G ./ex-2-scorep > sum_1000_100.txt
+srun -n 16 --mem=64G ./ex-2-scorep > sum_1000_100.txt
